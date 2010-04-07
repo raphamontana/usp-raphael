@@ -1,7 +1,7 @@
 #ifndef ERRO_H
 #define ERRO_H
 
-/* Definição de códigos de erros */
+/* Definicao de codigos de erros */
 #define ERRO_GETTOKEN       900
 #define ERRO_NUM_DECIMAL    901
 #define ERRO_NUM_REAL       902

@@ -1,27 +1,5 @@
 #include "analisadorlexico.h"
 
-#define ERRO           -1
-#define INTEIRO         0
-#define REAL            1
-#define IDENTIFICADOR   2
-#define LE              9
-#define NE              10
-#define LT              11
-#define ASSIGN          13
-#define GE              15
-#define GT              16
-#define EQ              17
-#define COMMA           18
-#define PLUS            19
-#define MINUS           20
-#define MULT            21
-#define DIV             22
-#define SMCLN           23
-#define OPENPAR         24
-#define CLOSEPAR        25
-
-enum estados{INICIAL, ESTADO_DIGITO, RETORNA_INTEIRO, PONTO_DECIMAL, ESTADO_REAL, RETORNA_REAL};
-
 AnalisadorLexico::AnalisadorLexico(FILE * fonte, multimap<char *, char *> *tabelaSimbolos)
 {
     this->fonte = fonte;
@@ -32,82 +10,90 @@ int AnalisadorLexico::proxToken()
 {
     int estado = INICIAL;
     char token[102];
-    int tokenLen = 0;
-    token[tokenLen] = proxCaractere();
+    int tokenLen = -1;
     while (true) {
+        token[++tokenLen] = proxCaractere();
         switch (estado) {
             case INICIAL:
                 if (ehDigito(token[tokenLen])) {
                     estado = ESTADO_DIGITO;
                 }
                 if (ehLetra(token[tokenLen])) {
-                    estado = 24;
+                    estado = ESTADO_LETRA;
                 }
                 else if (token[tokenLen] == '=') {
                     estado = 17;
                 }
                 else if (token[tokenLen] == ':') {
-                    estado = 12;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == '<') {
                     estado = 8;
                 }
                 else if (token[tokenLen] == '>') {
-                    estado = 14;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == ' ') {
+                    estado = 15;
                 }
                 else if (token[tokenLen] == '{') {
                     estado = 26;
                 }
                 else if (token[tokenLen] == ';') {
-                    estado = 23;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == ',') {
                     estado = 18;
                 }
 
                 else if (token[tokenLen] == '(') {
-                    estado = 24;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == ')') {
                     estado = 25;
                 }
                 else if (token[tokenLen] == '+') {
-                    estado = 19;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == '-') {
-                    estado = 20;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == '*') {
-                    estado = 21;
+                    estado = 15;
                 }
                 else if (token[tokenLen] == '/') {
                     estado = 22;
                 }
                 else if (token[tokenLen] == EOF) {
+                    estado = 15;
                 }
                 else return(ERRO);
                 break;
             case ESTADO_DIGITO:
-                token[++tokenLen] = proxCaractere();
                 if (ehDigito(token[tokenLen])) {
+                    estado = ESTADO_DIGITO;
                 }
                 else if (token[tokenLen] == '.') {
-                    estado = ESTADO_REAL;
+                    estado = PONTO_DECIMAL;
                 }
                 else {
-                    token[tokenLen] = '\0';
-                    devolveCaractere();
-                    return(INTEIRO);//eh inteiro
+                    estado = RETORNA_INTEIRO;
                 }
                 break;
-            case 2:
+            case RETORNA_INTEIRO:
+                token[tokenLen] = '\0';
+                devolveCaractere();
+                return(INTEIRO);
+            case PONTO_DECIMAL:
+                if (ehDigito(token[tokenLen])) {
+                    estado = RETORNA_REAL;
+                }
+                else {
+                    estado = RETORNA_ERRO;
+                }
 
                 break;
-            case 3:
-                break;
-            case 4:
+            case ESTADO_REAL:
                 break;
             case 5:
                 break;
@@ -214,14 +200,14 @@ int AnalisadorLexico::ehLetra(char c)
     return(((c > 64) && (c < 91)) || ((c > 96) && (c < 123)));
 }
 
-Entrada * AnalisadorLexico::retornaLexema()
+Token * AnalisadorLexico::retornaLexema()
 {
     return(NULL);
 }
 
 void AnalisadorLexico::devolveCaractere()
 {
-    fseek(fonte, -1, SEEK_CUR);
+    fseek(fonte, (-1)*sizeof(char), SEEK_CUR);
 }
 
 void AnalisadorLexico::emitirToken(int, char)
