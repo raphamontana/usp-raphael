@@ -2,6 +2,7 @@
 #define ANALISADORLEXICO_H
 
 #include <stdio.h>
+#include <string.h>
 #include <map>
 
 using namespace std;
@@ -39,6 +40,7 @@ enum estados {INICIAL,
              RETORNA_NAO_IGUAL,
              RETORNA_MENOR,
              ESTADO_ATRIBUICAO,
+             RETORNA_TIPO_VAR,
              RETORNA_ATRIBUICAO,
              ESTADO_MAIOR,
              RETORNA_MAIOR,
@@ -53,6 +55,7 @@ enum estados {INICIAL,
              RETORNA_ABRE_PARENTESES,
              RETORNA_FECHA_PARENTESES,
              ESTADO_COMENTARIO,
+             RETORNA_PONTO,
              RETORNA_FIM_ARQUIVO,
              RETORNA_ERRO
             };
@@ -67,7 +70,7 @@ class AnalisadorLexico
 public:
     AnalisadorLexico(FILE * fonte, multimap<char *, char *> *tabelaSimbolos);
 
-    int proxToken();
+    Token proxToken();
 
 private:
     char proxCaractere();
@@ -78,7 +81,7 @@ private:
 
     Token * retornaLexema();
 
-    void devolveCaractere();
+    void devolveCaractere(int n);
 
     void emitirToken(int, char);
 
