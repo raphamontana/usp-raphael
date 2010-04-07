@@ -13,6 +13,7 @@ int AnalisadorLexico::proxToken()
     int tokenLen = -1;
     while (true) {
         token[++tokenLen] = proxCaractere();
+
         switch (estado) {
             case INICIAL:
                 if (ehDigito(token[tokenLen])) {
@@ -22,50 +23,50 @@ int AnalisadorLexico::proxToken()
                     estado = ESTADO_LETRA;
                 }
                 else if (token[tokenLen] == '=') {
-                    estado = 17;
+                    estado = RETORNA_IGUAL;
                 }
                 else if (token[tokenLen] == ':') {
-                    estado = 15;
+                    estado = ESTADO_ATRIBUICAO;
                 }
                 else if (token[tokenLen] == '<') {
-                    estado = 8;
+                    estado = ESTADO_MENOR;
                 }
                 else if (token[tokenLen] == '>') {
-                    estado = 15;
+                    estado = ESTADO_MAIOR;
                 }
                 else if (token[tokenLen] == ' ') {
-                    estado = 15;
+                    //estado = 15;
                 }
                 else if (token[tokenLen] == '{') {
-                    estado = 26;
+                    estado = ESTADO_COMENTARIO;
                 }
                 else if (token[tokenLen] == ';') {
-                    estado = 15;
+                    estado = RETORNA_PONTO_VIRGULA;
                 }
                 else if (token[tokenLen] == ',') {
-                    estado = 18;
+                    estado = RETORNA_VIRGULA;
                 }
 
                 else if (token[tokenLen] == '(') {
-                    estado = 15;
+                    estado = RETORNA_ABRE_PARENTESES;
                 }
                 else if (token[tokenLen] == ')') {
-                    estado = 25;
+                    estado = RETORNA_FECHA_PARENTESES;
                 }
                 else if (token[tokenLen] == '+') {
-                    estado = 15;
+                    estado = RETORNA_MAIS;
                 }
                 else if (token[tokenLen] == '-') {
-                    estado = 15;
+                    estado = RETORNA_MENOS;
                 }
                 else if (token[tokenLen] == '*') {
-                    estado = 15;
+                    estado = RETORNA_MULTIPLICACAO;
                 }
                 else if (token[tokenLen] == '/') {
-                    estado = 22;
+                    estado = RETORNA_DIVISAO;
                 }
                 else if (token[tokenLen] == EOF) {
-                    estado = 15;
+                    estado = RETORNA_FIM_ARQUIVO;
                 }
                 else return(ERRO);
                 break;
@@ -95,87 +96,87 @@ int AnalisadorLexico::proxToken()
                 break;
             case ESTADO_REAL:
                 break;
-            case 5:
+            case RETORNA_REAL:
                 break;
-            case 6:
+            case ESTADO_LETRA:
                 break;
-            case 7:
+            case RETORNA_IDENTIFICADOR:
                 break;
-            case 8:{
+            case ESTADO_MENOR:{
                     if(token[tokenLen] == '=')
-                        estado = 9;
+                        estado = RETORNA_MENOR_IGUAL;
                     else if(token[tokenLen] == '>')
-                        estado = 10;
-                    else estado = 11;
+                        estado = RETORNA_NAO_IGUAL;
+                    else estado = RETORNA_MENOR;
 
                 }
                 break;
-            case 9:
+            case RETORNA_MENOR_IGUAL:
                     return LE;
                 break;
-            case 10:
+            case RETORNA_NAO_IGUAL:
                     return NE;
                 break;
-            case 11:{
+            case RETORNA_MENOR:{
                     devolveCaractere();
                     return LT;
                 }
                 break;
-            case 12:
+            case ESTADO_ATRIBUICAO:
                     if(token[tokenLen] == '=')
-                        estado = 13;
+                        estado = RETORNA_ATRIBUICAO;
                     else
                         return ERRO;
                 break;
-            case 13:
+            case RETORNA_ATRIBUICAO:
                     return ASSIGN;
                 break;
-            case 14:
+            case ESTADO_MAIOR:
                     if(token[tokenLen] == '=')
-                        estado = 15;
-                    else estado = 16;
+                        estado = RETORNA_MAIOR_IGUAL;
+                    else estado = RETORNA_MAIOR;
 
                 break;
-            case 15:
+            case RETORNA_MAIOR_IGUAL:
                     return GE;
                 break;
-            case 16:{
+            case RETORNA_MAIOR:{
                     devolveCaractere();
                     return GT;
                 }
                 break;
-            case 17:
+            case RETORNA_IGUAL:
                     return EQ;
                 break;
-            case 18:
+            case RETORNA_VIRGULA:
                     return COMMA;
                 break;
-            case 19:
+            case RETORNA_MAIS:
                     return PLUS;
                 break;
-            case 20:
+            case RETORNA_MENOS:
                     return MINUS;
                 break;
-            case 21:
+            case RETORNA_MULTIPLICACAO:
                     return MULT;
                 break;
-            case 22:
+            case RETORNA_DIVISAO:
                     return DIV;
                 break;
-            case 23:
+            case RETORNA_PONTO_VIRGULA:
                     return SMCLN;
                 break;
-            case 24:
+            case RETORNA_ABRE_PARENTESES:
                     return OPENPAR;
                 break;
-            case 25:
+            case RETORNA_FECHA_PARENTESES:
                     return CLOSEPAR;
                 break;
-            case 26:
+            case 26:    return ERRO;
                 break;
-            case 27:
+            case 27:    return ERRO;
                 break;
-            case 28:
+            case 28:    return ERRO;
                 break;
             default:
                 break;
