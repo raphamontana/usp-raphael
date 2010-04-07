@@ -6,11 +6,61 @@
 
 using namespace std;
 
+#define ERRO           -1
+#define INTEIRO         0
+#define REAL            1
+#define IDENTIFICADOR   2
+#define LE              9
+#define NE              10
+#define LT              11
+#define ASSIGN          13
+#define GE              15
+#define GT              16
+#define EQ              17
+#define COMMA           18
+#define PLUS            19
+#define MINUS           20
+#define MULT            21
+#define DIV             22
+#define SMCLN           23
+#define OPENPAR         24
+#define CLOSEPAR        25
+
+enum estados {INICIAL,
+             ESTADO_DIGITO,
+             RETORNA_INTEIRO,
+             PONTO_DECIMAL,
+             ESTADO_REAL,
+             RETORNA_REAL,
+             ESTADO_LETRA,
+             RETORNA_IDENTIFICADOR,
+             ESTADO_MENOR,
+             RETORNA_MENOR_IGUAL,
+             RETORNA_NAO_IGUAL,
+             RETORNA_MENOR,
+             ESTADO_ATRIBUICAO,
+             RETORNA_ATRIBUICAO,
+             ESTADO_MAIOR,
+             RETORNA_MAIOR,
+             RETORNA_MAIOR_IGUAL,
+             RETORNA_IGUAL,
+             RETORNA_VIRGULA,
+             RETORNA_MAIS,
+             RETORNA_MENOS,
+             RETORNA_MULTIPLICACAO,
+             RETORNA_DIVISAO,
+             RETORNA_PONTO_VIRGULA,
+             RETORNA_ABRE_PARENTESES,
+             RETORNA_FECHA_PARENTESES,
+             ESTADO_COMENTARIO,
+             RETORNA_FIM_ARQUIVO,
+             RETORNA_ERRO
+            };
+
 typedef struct {
-    char *buffer;
-    char *inicio;
-    char *final;
-} Entrada;
+    char simbolo[128];
+    char tipo[24];
+} Token;
 
 class AnalisadorLexico
 {
@@ -26,7 +76,7 @@ private:
 
     int ehLetra(char c);
 
-    Entrada * retornaLexema();
+    Token * retornaLexema();
 
     void devolveCaractere();
 

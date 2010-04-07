@@ -1,7 +1,7 @@
 #include "compilador.h"
 
 /**
- * Programa principal só inicia o compilador
+ * Programa principal soh inicia o compilador
  */
 int main(int argc, char *argv[])
 {
