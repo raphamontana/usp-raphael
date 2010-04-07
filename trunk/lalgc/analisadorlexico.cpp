@@ -4,6 +4,21 @@
 #define INTEIRO         0
 #define REAL            1
 #define IDENTIFICADOR   2
+#define LE              9
+#define NE              10
+#define LT              11
+#define ASSIGN          13
+#define GE              15
+#define GT              16
+#define EQ              17
+#define COMMA           18
+#define PLUS            19
+#define MINUS           20
+#define MULT            21
+#define DIV             22
+#define SMCLN           23
+#define OPENPAR         24
+#define CLOSEPAR        25
 
 enum estados{INICIAL, ESTADO_DIGITO, RETORNA_INTEIRO, PONTO_DECIMAL, ESTADO_REAL, RETORNA_REAL};
 
@@ -29,13 +44,16 @@ int AnalisadorLexico::proxToken()
                     estado = 24;
                 }
                 else if (token[tokenLen] == '=') {
-                    estado = 15;
+                    estado = 17;
                 }
                 else if (token[tokenLen] == ':') {
+                    estado = 12;
                 }
                 else if (token[tokenLen] == '<') {
+                    estado = 8;
                 }
                 else if (token[tokenLen] == '>') {
+                    estado = 14;
                 }
                 else if (token[tokenLen] == ' ') {
                 }
@@ -43,20 +61,29 @@ int AnalisadorLexico::proxToken()
                     estado = 26;
                 }
                 else if (token[tokenLen] == ';') {
+                    estado = 23;
                 }
                 else if (token[tokenLen] == ',') {
+                    estado = 18;
                 }
+
                 else if (token[tokenLen] == '(') {
+                    estado = 24;
                 }
                 else if (token[tokenLen] == ')') {
+                    estado = 25;
                 }
                 else if (token[tokenLen] == '+') {
+                    estado = 19;
                 }
                 else if (token[tokenLen] == '-') {
+                    estado = 20;
                 }
                 else if (token[tokenLen] == '*') {
+                    estado = 21;
                 }
                 else if (token[tokenLen] == '/') {
+                    estado = 22;
                 }
                 else if (token[tokenLen] == EOF) {
                 }
@@ -76,6 +103,7 @@ int AnalisadorLexico::proxToken()
                 }
                 break;
             case 2:
+
                 break;
             case 3:
                 break;
@@ -87,41 +115,75 @@ int AnalisadorLexico::proxToken()
                 break;
             case 7:
                 break;
-            case 8:
+            case 8:{
+                    if(token[tokenLen] == '=')
+                        estado = 9;
+                    else if(token[tokenLen] == '>')
+                        estado = 10;
+                    else estado = 11;
+
+                }
                 break;
             case 9:
+                    return LE;
                 break;
             case 10:
+                    return NE;
                 break;
-            case 11:
+            case 11:{
+                    devolveCaractere();
+                    return LT;
+                }
                 break;
             case 12:
+                    if(token[tokenLen] == '=')
+                        estado = 13;
+                    else
+                        return ERRO;
                 break;
             case 13:
+                    return ASSIGN;
                 break;
             case 14:
+                    if(token[tokenLen] == '=')
+                        estado = 15;
+                    else estado = 16;
+
                 break;
             case 15:
+                    return GE;
                 break;
-            case 16:
+            case 16:{
+                    devolveCaractere();
+                    return GT;
+                }
                 break;
             case 17:
+                    return EQ;
                 break;
             case 18:
+                    return COMMA;
                 break;
             case 19:
+                    return PLUS;
                 break;
             case 20:
+                    return MINUS;
                 break;
             case 21:
+                    return MULT;
                 break;
             case 22:
+                    return DIV;
                 break;
             case 23:
+                    return SMCLN;
                 break;
             case 24:
+                    return OPENPAR;
                 break;
             case 25:
+                    return CLOSEPAR;
                 break;
             case 26:
                 break;
