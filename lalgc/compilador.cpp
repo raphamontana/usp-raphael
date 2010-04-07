@@ -8,9 +8,13 @@ Compilador::Compilador(char * nomearquivo)
         return;
     }
     aLex = new AnalisadorLexico(fonte, &tabelaSimbolos);
+    Token token;
     while (!feof(fonte)) {
-        aLex->proxToken();
-        //aLex->emitirToken();
+        token = aLex->proxToken();
+        if (strcmp(token.tipo, "EOF")) {
+            printf("%s - %s\n", token.simbolo, token.tipo);
+        }
+        //aLex->emitirToken(token);
     }
     fclose(fonte);
 }
