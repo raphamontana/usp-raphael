@@ -11,10 +11,9 @@ Compilador::Compilador(char * nomearquivo)
     Token token;
     while (!feof(fonte)) {
         token = aLex->proxToken();
-        if (strcmp(token.tipo, "EOF")) {
-            printf("%s - %s\n", token.simbolo, token.tipo);
-        }
-        //aLex->emitirToken(token);
+        aLex->emitirToken(token);
+        printf("%s - %s\n", token.simbolo, token.tipo);
     }
+
     fclose(fonte);
 }

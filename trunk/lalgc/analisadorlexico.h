@@ -72,6 +72,8 @@ public:
 
     Token proxToken();
 
+    void emitirToken(Token token);
+
 private:
     char proxCaractere();
 
@@ -82,8 +84,6 @@ private:
     Token * retornaLexema();
 
     void devolveCaractere(int n);
-
-    void emitirToken(int, char);
 
     void emiteErroLexico(int codigo);
 
