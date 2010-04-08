@@ -3,30 +3,16 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 #include <map>
+#include <string>
 
 using namespace std;
 
-#define ERRO           -1
-#define INTEIRO         0
-#define REAL            1
-#define IDENTIFICADOR   2
-#define LE              9
-#define NE              10
-#define LT              11
-#define ASSIGN          13
-#define GE              15
-#define GT              16
-#define EQ              17
-#define COMMA           18
-#define PLUS            19
-#define MINUS           20
-#define MULT            21
-#define DIV             22
-#define SMCLN           23
-#define OPENPAR         24
-#define CLOSEPAR        25
-
+/**
+ * Esta enumeracao serve para organizar os estados,
+ * eh mais facil referenciar o estado RETORNA_IDENTIFICADOR do que o estado 8. ;)
+ */
 enum estados {INICIAL,
              ESTADO_DIGITO,
              RETORNA_INTEIRO,
@@ -60,19 +46,26 @@ enum estados {INICIAL,
              RETORNA_ERRO
             };
 
+/**
+ * Estrutura interna para armazenar um token
+ * corresponde de duas palavras, uma identifica o simbolo e a outra o significado do simbolo.
+ */
 typedef struct {
     char simbolo[128];
     char tipo[24];
 } Token;
 
+/**
+ * Classe Analisador Lexico
+ */
 class AnalisadorLexico
 {
 public:
-    AnalisadorLexico(FILE * fonte, multimap<char *, char *> *tabelaSimbolos);
+    AnalisadorLexico(FILE * fonte, multimap<string, string> *tabelaSimbolos);
 
     Token proxToken();
 
-    void emitirToken(Token token);
+    void emitirToken(Token * token);
 
 private:
     char proxCaractere();
@@ -81,15 +74,13 @@ private:
 
     int ehLetra(char c);
 
-    Token * retornaLexema();
-
     void devolveCaractere(int n);
 
     void emiteErroLexico(int codigo);
 
     FILE * fonte;
 
-    multimap<char *, char *> *tabelaSimbolos;
+    multimap<string, string> *tabelaSimbolos;
 
     int n_linha;
 };
