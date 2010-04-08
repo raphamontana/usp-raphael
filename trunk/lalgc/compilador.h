@@ -17,7 +17,7 @@ private:
 
     AnalisadorSemantico * aSem;
 
-    multimap<char *, char *> tabelaSimbolos;
+    multimap<string, string> tabelaSimbolos;
 
     FILE * fonte;
 };
