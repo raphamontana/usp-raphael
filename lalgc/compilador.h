@@ -12,6 +12,8 @@ public:
     Compilador(char * nomearquivo);
 
 private:
+    void testarLexico();
+
     AnalisadorLexico * aLex;
 
     AnalisadorSintatico * aSin;

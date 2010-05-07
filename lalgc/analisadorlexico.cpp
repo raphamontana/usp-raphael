@@ -1,7 +1,7 @@
 #include "analisadorlexico.h"
 
 /**
-  @todo guardar o numero de linhas (para avisar de eventuais erros)
+ * @todo guardar o numero de linhas (para avisar de eventuais erros)
 */
 
 /**
@@ -301,7 +301,6 @@ void AnalisadorLexico::devolveCaractere(int n)
  * A principal funcao deste metodo eh separar as palavras reservadas dos identificadores
  * e inserir os tokens na tabela hash de simbolos.
  */
-/*
 void AnalisadorLexico::emitirToken(Token * token)
 {
     //Analisa se algum identificador contem uma palavra reservada
@@ -353,7 +352,6 @@ void AnalisadorLexico::emitirToken(Token * token)
     tabelaSimbolos->insert(pair<string, string> (token->simbolo, token->tipo));
     cout << token->simbolo << " - " << token->tipo << endl;
 }
-*/
 
 
 /**

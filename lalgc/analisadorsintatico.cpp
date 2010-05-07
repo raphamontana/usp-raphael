@@ -9,20 +9,29 @@ AnalisadorSintatico::AnalisadorSintatico(AnalisadorLexico * aLex)
 }
 
 
+/**
+ * Destrutor
+ */
 AnalisadorSintatico::~AnalisadorSintatico()
 {
 }
 
 
+/**
+ * Metodo inicializador da analise
+ */
 void AnalisadorSintatico::asd()
 {
+    imprimirMensagem("Inicio da analise sintatica.");
     token = aLex->obterToken();
     programa();
+    imprimirMensagem("Fim da analise sintatica.");
 }
 
 
 void AnalisadorSintatico::programa()
 {
+    imprimirMensagem(" Inicio do programa.");
     imprimirMensagem(token.simbolo);
     if (!strcmp("program", token.simbolo)) {
         token = aLex->obterToken();
@@ -56,16 +65,18 @@ void AnalisadorSintatico::programa()
         imprimirErro("ponto esperado");
         erro();
     }
-    imprimirMensagem(token.simbolo);
-    if (strcmp("EOF", token.simbolo)) {
+    //imprimirMensagem(token.simbolo);
+    if (strcmp("EOF", token.tipo)) {
         imprimirErro("fim de arquivo esperado");
         erro();
     }
+    imprimirMensagem(" Fim do programa.");
 }
 
 
 void AnalisadorSintatico::corpo()
 {
+    imprimirMensagem("  Inicio do corpo.");
     dc();
     imprimirMensagem(token.simbolo);
     if (!strcmp("begin", token.simbolo)) {
@@ -84,32 +95,29 @@ void AnalisadorSintatico::corpo()
         imprimirErro("end esperado");
         erro();
     }
+    imprimirMensagem("  Fim do corpo.");
 }
 
 
 void AnalisadorSintatico::dc()
 {
+    imprimirMensagem("   Inicio do bloco de declaracoes");
     dc_v();
     dc_p();
+    imprimirMensagem("   Fim do bloco de declaracoes");
 }
 
 
 void AnalisadorSintatico::dc_v()
 {
-    /**
-     * @todo o que fazer com o λ???
-    */
-    //var <variaveis> : <tipo_var> ; <dc_v> | λ;
-
-    imprimirMensagem(token.simbolo);
+    imprimirMensagem("    Inicio da declaracao de variaveis");
     if (!strcmp("var", token.simbolo)) {
+        imprimirMensagem(token.simbolo);
         token = aLex->obterToken();
     }
     else {
-        /**
-         * @todo if (ehSeguidor(token))
-         */
         if (1) {
+            imprimirMensagem("    Fim da declaracao de variaveis");
             return;
         }
         else {
@@ -137,11 +145,13 @@ void AnalisadorSintatico::dc_v()
         erro();
     }
     dc_v();
+    imprimirMensagem("    Fim da declaracao de variaveis");
 }
 
 
 void AnalisadorSintatico::tipo_var()
 {
+    imprimirMensagem("     Inicio do tipo de variavel");
     imprimirMensagem(token.simbolo);
     if (!strcmp("real", token.simbolo) || !strcmp("integer", token.simbolo)) {
         token = aLex->obterToken();
@@ -150,11 +160,13 @@ void AnalisadorSintatico::tipo_var()
         imprimirErro("tipo de variavel esperado");
         erro();
     }
+    imprimirMensagem("     Fim do tipo de variavel");
 }
 
 
 void AnalisadorSintatico::variaveis()
 {
+    imprimirMensagem("     Inicio de variaveis");
     imprimirMensagem(token.simbolo);
     if (!strcmp("IDENTIFICADOR", token.tipo)) {
         token = aLex->obterToken();
@@ -164,17 +176,20 @@ void AnalisadorSintatico::variaveis()
         erro();
     }
     mais_var();
+    imprimirMensagem("     Fim de variaveis");
 }
 
 
 void AnalisadorSintatico::mais_var()
 {
-    imprimirMensagem(token.simbolo);
+    imprimirMensagem("      Inicio de mais variaveis");
     if (!strcmp(",", token.simbolo)) {
+        imprimirMensagem(token.simbolo);
         token = aLex->obterToken();
     }
     else {
         if (1) {
+            imprimirMensagem("      Fim de mais variaveis");
             return;
         }
         else {
@@ -183,11 +198,13 @@ void AnalisadorSintatico::mais_var()
         }
     }
     variaveis();
+    imprimirMensagem("      Fim de mais variaveis");
 }
 
 
 void AnalisadorSintatico::dc_p()
 {
+    imprimirMensagem("Inicio da declaracao de procedimentos");
     imprimirMensagem(token.simbolo);
     if (!strcmp("procedure", token.simbolo)) {
         token = aLex->obterToken();
@@ -220,6 +237,7 @@ void AnalisadorSintatico::dc_p()
     }
     corpo_p();
     dc_p();
+    imprimirMensagem("Fim da declaracao de procedimetos");
 }
 
 
@@ -268,7 +286,6 @@ void AnalisadorSintatico::lista_par()
 
 void AnalisadorSintatico::mais_par()
 {
-    //; <lista_par> | λ
     imprimirMensagem(token.simbolo);
     if (!strcmp(";", token.simbolo)) {
         token = aLex->obterToken();
@@ -424,7 +441,7 @@ void AnalisadorSintatico::comandos()
 void AnalisadorSintatico::cmd()
 {
     imprimirMensagem(token.simbolo);
-    if (!strcmp("read", token.tipo) || !strcmp("write", token.tipo)) {
+    if (!strcmp("read", token.simbolo) || !strcmp("write", token.simbolo)) {
         token = aLex->obterToken();
         imprimirMensagem(token.simbolo);
         if (!strcmp("(", token.simbolo)) {
@@ -510,9 +527,9 @@ void AnalisadorSintatico::condicao()
 void AnalisadorSintatico::relacao()
 {
     imprimirMensagem(token.simbolo);
-    if (!strcmp("=",  token.tipo) || !strcmp("<>", token.tipo) ||
-        !strcmp(">=", token.tipo) || !strcmp("<=", token.tipo) ||
-        !strcmp(">",  token.tipo) || !strcmp("<",  token.tipo))
+    if (!strcmp("=",  token.simbolo) || !strcmp("<>", token.simbolo) ||
+        !strcmp(">=", token.simbolo) || !strcmp("<=", token.simbolo) ||
+        !strcmp(">",  token.simbolo) || !strcmp("<",  token.simbolo))
     {
         token = aLex->obterToken();
     }
@@ -534,7 +551,7 @@ void AnalisadorSintatico::expressao()
 void AnalisadorSintatico::op_un()
 {
     imprimirMensagem(token.simbolo);
-    if (!strcmp("+", token.tipo) || !strcmp("-", token.tipo)) {
+    if (!strcmp("+", token.simbolo) || !strcmp("-", token.simbolo)) {
         token = aLex->obterToken();
     }
     else {
@@ -563,7 +580,7 @@ void AnalisadorSintatico::outros_termos()
 void AnalisadorSintatico::op_ad()
 {
     imprimirMensagem(token.simbolo);
-    if (!strcmp("+", token.tipo) || !strcmp("-", token.tipo)) {
+    if (!strcmp("+", token.simbolo) || !strcmp("-", token.simbolo)) {
         token = aLex->obterToken();
     }
     else {
@@ -595,7 +612,7 @@ void AnalisadorSintatico::mais_fatores()
 void AnalisadorSintatico::op_mul()
 {
     imprimirMensagem(token.simbolo);
-    if (!strcmp("*", token.tipo) || !strcmp("/", token.tipo)) {
+    if (!strcmp("*", token.simbolo) || !strcmp("/", token.simbolo)) {
         token = aLex->obterToken();
     }
     else {
@@ -614,10 +631,10 @@ void AnalisadorSintatico::fator()
         token = aLex->obterToken();
     }
     else {
-        if (!strcmp("(", token.tipo)) {
+        if (!strcmp("(", token.simbolo)) {
             token = aLex->obterToken();
             expressao();
-            if (!strcmp(")", token.tipo)) {
+            if (!strcmp(")", token.simbolo)) {
                 token = aLex->obterToken();
             }
             else {
@@ -633,6 +650,9 @@ void AnalisadorSintatico::fator()
 }
 
 
+/**
+ * Gerenciador de erros no modo panico
+ */
 void AnalisadorSintatico::erro()
 {
     while (0) {
@@ -641,14 +661,21 @@ void AnalisadorSintatico::erro()
 }
 
 
+/**
+ * Emissor de mensagens
+ */
 void AnalisadorSintatico::imprimirMensagem(string msg)
 {
-    #ifndef saidaLexico
+    #ifdef saidaLexico
     cout << msg << endl;
     #endif
+    fflush(stdout);
 }
 
 
+/**
+ * Emissor de erros
+ */
 void AnalisadorSintatico::imprimirErro(string msg)
 {
     cerr << "ERRO: " << msg << endl;

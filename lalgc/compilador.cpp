@@ -15,3 +15,13 @@ Compilador::Compilador(char * nomearquivo)
     delete(aSin);
     delete(aLex);
 }
+
+void Compilador::testarLexico()
+{
+    Token token = aLex->obterToken();
+    aLex->emitirToken(&token);
+    while (strcmp("EOF", token.tipo)) {
+        token = aLex->obterToken();
+        aLex->emitirToken(&token);
+    }
+}
