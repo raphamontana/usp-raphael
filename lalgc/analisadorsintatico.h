@@ -2,11 +2,14 @@
 #define ANALISADORSINTATICO_H
 
 /**
- * Define-se o 'saidaLexico' para imprimir os tokens lidos do analisador lexico
+ * Defines sao usados para depurar o programa.
  */
-#define saidaLexico
+#define imprimirEstagios
+#define imprimirSaidaLexico
 
 #include "analisadorlexico.h"
+#include <set>
+using namespace std;
 
 
 class AnalisadorSintatico
@@ -48,7 +51,8 @@ private:
     void op_mul();
     void fator();
     void erro();
-    void imprimirMensagem(string msg);
+    void imprimirEstagio(string msg);
+    void imprimirToken(string msg);
     void imprimirErro(string msg);
 
     AnalisadorLexico * aLex;

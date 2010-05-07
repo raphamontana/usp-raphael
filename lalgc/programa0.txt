@@ -1,0 +1,5 @@
+program ident;
+begin
+a:=+2*8;
+read(a);
+end.
