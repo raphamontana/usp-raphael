@@ -2,6 +2,6 @@ program lalg;
 {entrada}
 var a: integer;
 begin
-readd(a,@,1,233);
+readd(a,@,1);
 end.
 
