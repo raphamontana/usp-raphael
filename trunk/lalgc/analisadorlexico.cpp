@@ -1,20 +1,44 @@
 #include "analisadorlexico.h"
 
 /**
+  @todo guardar o numero de linhas (para avisar de eventuais erros)
+*/
+
+/**
  * O construtor recebe os enderecos na memoria do arquivo fonte
  * e da tabela de simbolos para inserir os tokens que ele ler.
  */
-AnalisadorLexico::AnalisadorLexico(FILE * fonte, multimap<string, string> *tabelaSimbolos)
+AnalisadorLexico::AnalisadorLexico(char * nomearquivo)
 {
-    this->fonte = fonte;
-    this->tabelaSimbolos = tabelaSimbolos;
+    fonte = fopen(nomearquivo, "r");
+    if (fonte == NULL) {
+        char msg[1024];
+        sprintf(msg, "Erro ao abrir arquivo %s", nomearquivo);
+        perror(msg);
+        exit(0);
+    }
+    constroiTabelaPalavrasReservadas();
 }
+
+
+AnalisadorLexico::~AnalisadorLexico()
+{
+    tabelaSimbolos->clear();
+    fclose(fonte);
+}
+
+
+void AnalisadorLexico::constroiTabelaPalavrasReservadas()
+{
+    this->tabelaSimbolos = new multimap<string, string>();
+}
+
 
 /**
  * Este eh o metodo que varre o arquivo letra por letra,
  * e identifica os identificadoes, numeros, operadores, entre outros.
  */
-Token AnalisadorLexico::proxToken()
+Token AnalisadorLexico::obterToken()
 {
     int estado = INICIAL;
     Token token;
@@ -23,10 +47,10 @@ Token AnalisadorLexico::proxToken()
         token.simbolo[++tokenLen] = proxCaractere();
         switch (estado) {
             case INICIAL:
-                if (ehDigito(token.simbolo[tokenLen])) {
+                if (isdigit(token.simbolo[tokenLen])) {
                     estado = ESTADO_DIGITO;
                 }
-                else if (ehLetra(token.simbolo[tokenLen])) {
+                else if (isalpha(token.simbolo[tokenLen])) {
                     estado = ESTADO_LETRA;
                 }
                 else if (token.simbolo[tokenLen] == '=') {
@@ -87,7 +111,7 @@ Token AnalisadorLexico::proxToken()
                 }
                 break;
             case ESTADO_DIGITO:
-                if (ehDigito(token.simbolo[tokenLen])) {
+                if (isdigit(token.simbolo[tokenLen])) {
                     estado = ESTADO_DIGITO;
                 }
                 else if (token.simbolo[tokenLen] == '.') {
@@ -103,7 +127,7 @@ Token AnalisadorLexico::proxToken()
                 strcpy(token.tipo, "NUM_INTEIRO");
                 return(token);
             case PONTO_DECIMAL:
-                if (ehDigito(token.simbolo[tokenLen])) {
+                if (isdigit(token.simbolo[tokenLen])) {
                     estado = ESTADO_REAL;
                 }
                 else {
@@ -111,7 +135,7 @@ Token AnalisadorLexico::proxToken()
                 }
                 break;
             case ESTADO_REAL:
-                if (ehDigito(token.simbolo[tokenLen])) {
+                if (isdigit(token.simbolo[tokenLen])) {
                     estado = ESTADO_REAL;
                 }
                 else {
@@ -124,7 +148,7 @@ Token AnalisadorLexico::proxToken()
                 strcpy(token.tipo, "NUM_REAL");
                 return(token);
             case ESTADO_LETRA:
-                if (ehLetra(token.simbolo[tokenLen]) || ehDigito(token.simbolo[tokenLen])) {
+                if (isalpha(token.simbolo[tokenLen]) || isdigit(token.simbolo[tokenLen])) {
                     estado = ESTADO_LETRA;
                 }
                 else {
@@ -252,6 +276,7 @@ Token AnalisadorLexico::proxToken()
     return(token);
 }
 
+
 /**
  * Metodo para receber um novo caractere do arquivo.
  */
@@ -261,21 +286,6 @@ char AnalisadorLexico::proxCaractere()
     return(c);
 }
 
-/**
- * Verifica se o caractere eh um digito de um numero.
- */
-int AnalisadorLexico::ehDigito(char c)
-{
-    return((c > 47) && (c < 58));
-}
-
-/**
- * Verifica se o caractere recebido eh uma letra maiuscula entre A e Z ou minuscula entre a e z.
- */
-int AnalisadorLexico::ehLetra(char c)
-{
-    return(((c > 64) && (c < 91)) || ((c > 96) && (c < 123)));
-}
 
 /**
  * No caso de ter lido um caractere a mais que nao pertence ao token atual,
@@ -286,10 +296,12 @@ void AnalisadorLexico::devolveCaractere(int n)
     fseek(fonte, (-1)*n*sizeof(char), SEEK_CUR);
 }
 
+
 /**
  * A principal funcao deste metodo eh separar as palavras reservadas dos identificadores
  * e inserir os tokens na tabela hash de simbolos.
  */
+/*
 void AnalisadorLexico::emitirToken(Token * token)
 {
     //Analisa se algum identificador contem uma palavra reservada
@@ -341,6 +353,8 @@ void AnalisadorLexico::emitirToken(Token * token)
     tabelaSimbolos->insert(pair<string, string> (token->simbolo, token->tipo));
     cout << token->simbolo << " - " << token->tipo << endl;
 }
+*/
+
 
 /**
  * Caso ocorra um erro no analisador lexico este metodo eh chamado para alertar o programador do erro.

@@ -5,6 +5,7 @@
 #include "analisadorsintatico.h"
 #include "analisadorsemantico.h"
 
+
 class Compilador
 {
 public:
@@ -16,10 +17,6 @@ private:
     AnalisadorSintatico * aSin;
 
     AnalisadorSemantico * aSem;
-
-    multimap<string, string> tabelaSimbolos;
-
-    FILE * fonte;
 };
 
 #endif // COMPILADOR_H

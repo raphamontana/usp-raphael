@@ -5,9 +5,12 @@
  */
 int main(int argc, char *argv[])
 {
+    Compilador * c;
     if (argc != 2) {
         puts("Passe o codigo fonte como argumento!");
+        return(0);
     }
-    Compilador c(argv[1]);
+    c = new Compilador(argv[1]);
+    delete(c);
     return(0);
 }
