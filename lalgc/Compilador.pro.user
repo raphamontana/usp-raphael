@@ -79,7 +79,7 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-qgvQyfw4Or,guid=18f4a91e17bee4f0965f7d734be346e7</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-VbVtAewpao,guid=5df574b668f3e3ad25d72dd84be35b7d</value>
     <value type="QString">DEFAULTS_PATH=/usr/share/gconf/gnome.default.path</value>
     <value type="QString">DESKTOP_SESSION=gnome</value>
     <value type="QString">DISPLAY=:0.0</value>
@@ -87,7 +87,7 @@
     <value type="QString">GDM_KEYBOARD_LAYOUT=us	intl</value>
     <value type="QString">GDM_LANG=pt_BR.UTF-8</value>
     <value type="QString">GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-7DBwRt</value>
+    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-NIEz3L</value>
     <value type="QString">GTK_MODULES=canberra-gtk-module</value>
     <value type="QString">HOME=/home/raphael</value>
     <value type="QString">INSIDE_NAUTILUS_PYTHON=</value>
@@ -101,20 +101,20 @@
     <value type="QString">PWD=/home/raphael</value>
     <value type="QString">PYGTK_USE_GIL_STATE_API=</value>
     <value type="QString">QTDIR=/usr/share/qt4</value>
-    <value type="QString">SESSION_MANAGER=local/montanari:@/tmp/.ICE-unix/1147,unix/montanari:/tmp/.ICE-unix/1147</value>
+    <value type="QString">SESSION_MANAGER=local/montanari:@/tmp/.ICE-unix/1140,unix/montanari:/tmp/.ICE-unix/1140</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SPEECHD_PORT=7560</value>
-    <value type="QString">SSH_AGENT_PID=1181</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-7DBwRt/ssh</value>
+    <value type="QString">SSH_AGENT_PID=1174</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-NIEz3L/ssh</value>
     <value type="QString">USER=raphael</value>
     <value type="QString">USERNAME=raphael</value>
-    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-raphael-mbDgvy/database</value>
+    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-raphael-nHPCDD/database</value>
     <value type="QString">XDG_CONFIG_DIRS=/etc/xdg/xdg-gnome:/etc/xdg</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString">XDG_SESSION_COOKIE=10cd05a80a8e9b37b973be664bdb4ade-1273186023.711436-1207463303</value>
+    <value type="QString">XDG_SESSION_COOKIE=10cd05a80a8e9b37b973be664bdb4ade-1273191292.822421-1604792688</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
-    <value type="QString">/media/Dados/USP/7 Período/Introdução à compiladores/Trabalhos/lalgc/Compilador.pro</value>
+    <value type="QString">/home/raphael/Desktop/usp-raphael/Compilador.pro</value>
     <value type="QString">-spec</value>
     <value type="QString">linux-g++</value>
     <value type="QString">-r</value>
@@ -122,7 +122,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/qmake-qt4</value>
    <value key="abstractProcess.enabled" type="bool">false</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/media/Dados/USP/7 Período/Introdução à compiladores/Trabalhos/lalgc</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/home/raphael/Desktop/usp-raphael</value>
    <value key="buildConfiguration" type=""></value>
   </valuemap>
  </data>
@@ -131,7 +131,7 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-qgvQyfw4Or,guid=18f4a91e17bee4f0965f7d734be346e7</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-VbVtAewpao,guid=5df574b668f3e3ad25d72dd84be35b7d</value>
     <value type="QString">DEFAULTS_PATH=/usr/share/gconf/gnome.default.path</value>
     <value type="QString">DESKTOP_SESSION=gnome</value>
     <value type="QString">DISPLAY=:0.0</value>
@@ -139,7 +139,7 @@
     <value type="QString">GDM_KEYBOARD_LAYOUT=us	intl</value>
     <value type="QString">GDM_LANG=pt_BR.UTF-8</value>
     <value type="QString">GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-7DBwRt</value>
+    <value type="QString">GNOME_KEYRING_CONTROL=/tmp/keyring-NIEz3L</value>
     <value type="QString">GTK_MODULES=canberra-gtk-module</value>
     <value type="QString">HOME=/home/raphael</value>
     <value type="QString">INSIDE_NAUTILUS_PYTHON=</value>
@@ -153,17 +153,17 @@
     <value type="QString">PWD=/home/raphael</value>
     <value type="QString">PYGTK_USE_GIL_STATE_API=</value>
     <value type="QString">QTDIR=/usr/share/qt4</value>
-    <value type="QString">SESSION_MANAGER=local/montanari:@/tmp/.ICE-unix/1147,unix/montanari:/tmp/.ICE-unix/1147</value>
+    <value type="QString">SESSION_MANAGER=local/montanari:@/tmp/.ICE-unix/1140,unix/montanari:/tmp/.ICE-unix/1140</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SPEECHD_PORT=7560</value>
-    <value type="QString">SSH_AGENT_PID=1181</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-7DBwRt/ssh</value>
+    <value type="QString">SSH_AGENT_PID=1174</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/keyring-NIEz3L/ssh</value>
     <value type="QString">USER=raphael</value>
     <value type="QString">USERNAME=raphael</value>
-    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-raphael-mbDgvy/database</value>
+    <value type="QString">XAUTHORITY=/var/run/gdm/auth-for-raphael-nHPCDD/database</value>
     <value type="QString">XDG_CONFIG_DIRS=/etc/xdg/xdg-gnome:/etc/xdg</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString">XDG_SESSION_COOKIE=10cd05a80a8e9b37b973be664bdb4ade-1273186023.711436-1207463303</value>
+    <value type="QString">XDG_SESSION_COOKIE=10cd05a80a8e9b37b973be664bdb4ade-1273191292.822421-1604792688</value>
    </valuelist>
    <value key="abstractProcess.IgnoreReturnValue" type="bool">false</value>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
@@ -171,7 +171,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool">true</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/media/Dados/USP/7 Período/Introdução à compiladores/Trabalhos/lalgc</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/home/raphael/Desktop/usp-raphael</value>
   </valuemap>
  </data>
  <data>

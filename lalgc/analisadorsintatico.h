@@ -1,13 +1,20 @@
 #ifndef ANALISADORSINTATICO_H
 #define ANALISADORSINTATICO_H
 
+/**
+ * Define-se o 'saidaLexico' para imprimir os tokens lidos do analisador lexico
+ */
+#define saidaLexico
+
 #include "analisadorlexico.h"
 
 
 class AnalisadorSintatico
 {
 public:
-    AnalisadorSintatico();
+    AnalisadorSintatico(AnalisadorLexico * aLex);
+    ~AnalisadorSintatico();
+    void asd();
 
 private:
     void programa();
@@ -29,6 +36,7 @@ private:
     void pfalsa();
     void comandos();
     void cmd();
+    void ident();
     void condicao();
     void relacao();
     void expressao();
@@ -39,8 +47,12 @@ private:
     void mais_fatores();
     void op_mul();
     void fator();
+    void erro();
+    void imprimirMensagem(string msg);
+    void imprimirErro(string msg);
 
-    AnalisadorLexico al;
+    AnalisadorLexico * aLex;
+    Token token;
 };
 
 #endif // ANALISADORSINTATICO_H
