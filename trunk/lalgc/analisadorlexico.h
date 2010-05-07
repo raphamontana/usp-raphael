@@ -72,6 +72,8 @@ public:
 
     Token obterToken();
 
+    void emitirToken(Token * token);
+
 private:
     void constroiTabelaPalavrasReservadas();
 
