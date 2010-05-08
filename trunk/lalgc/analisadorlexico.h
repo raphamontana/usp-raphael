@@ -55,7 +55,7 @@ enum estados {
  * corresponde de duas palavras, uma identifica o simbolo e a outra o significado do simbolo.
  */
 typedef struct {
-    char simbolo[128];
+    char cadeia[128];
     char tipo[24];
 } Token;
 

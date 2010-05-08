@@ -11,6 +11,7 @@ Compilador::Compilador(char * nomearquivo)
 {
     aLex = new AnalisadorLexico(nomearquivo);
     aSin = new AnalisadorSintatico(aLex);
+    //testarLexico();
     aSin->asd();
     delete(aSin);
     delete(aLex);
