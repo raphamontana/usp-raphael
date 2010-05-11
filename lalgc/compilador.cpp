@@ -12,8 +12,8 @@ Compilador::Compilador(char * nomearquivo)
     tabelaSimbolos = new vector<Simbolo>();
     aLex = new AnalisadorLexico(nomearquivo, tabelaSimbolos);
     aSin = new AnalisadorSintatico(aLex);
-    testarLexico();
-    //aSin->asd();
+    aSin->asd();
+    //testarLexico();
     delete(aSin);
     delete(aLex);
 }
@@ -28,10 +28,10 @@ Compilador::~Compilador()
 
 void Compilador::testarLexico()
 {
-    Simbolo simbolo = aLex->obterSimbolo();
-    cout << simbolo.cadeia << " # " << simbolo.token << endl;
-    while (simbolo.token != "EOF") {
+    Simbolo simbolo;
+    do {
         simbolo = aLex->obterSimbolo();
         cout << simbolo.cadeia << " # " << simbolo.token<<endl;
     }
+    while (simbolo.token != "EOF");
 }

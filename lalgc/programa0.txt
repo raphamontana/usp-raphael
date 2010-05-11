@@ -1,4 +1,7 @@
 program ident;
 begin
-	write(a);
+if a<b then
+	a:=b;
+else a:=b;
+a:=b;
 end.

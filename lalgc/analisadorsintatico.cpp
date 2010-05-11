@@ -8,7 +8,7 @@ AnalisadorSintatico::AnalisadorSintatico(AnalisadorLexico * aLex)
     this->aLex = aLex;
     contagemErros = 0;
     imprimirEstagios = true;
-    imprimirSaidaLexico = true;
+    imprimirSimbolos = true;
 }
 
 
@@ -47,14 +47,13 @@ void AnalisadorSintatico::programa()
         erro();
     }
     imprimirToken();
-    if (simbolo.tipo == "IDENTIFICADOR") {
+    if (simbolo.token == "IDENTIFICADOR") {
         simbolo = aLex->obterSimbolo();
     }
     else {
         imprimirErro("identificador de programa esperado");
         erro();
     }
-    exit(66);
     imprimirToken();
     if (simbolo.cadeia == ";") {
         simbolo = aLex->obterSimbolo();
@@ -72,7 +71,7 @@ void AnalisadorSintatico::programa()
         imprimirErro("ponto esperado");
         erro();
     }
-    if (simbolo.tipo != "EOF") {
+    if (simbolo.token != "EOF") {
         imprimirErro("fim de arquivo esperado");
         erro();
     }
@@ -175,7 +174,7 @@ void AnalisadorSintatico::variaveis()
 {
     imprimirEstagio("     Inicio de variaveis");
     imprimirToken();
-    if (simbolo.tipo == "IDENTIFICADOR") {
+    if (simbolo.token == "IDENTIFICADOR") {
         simbolo = aLex->obterSimbolo();
     }
     else {
@@ -227,7 +226,7 @@ void AnalisadorSintatico::dc_p()
         }
     }
     imprimirToken();
-    if (simbolo.tipo == "IDENTIFICADOR") {
+    if (simbolo.token == "IDENTIFICADOR") {
         simbolo = aLex->obterSimbolo();
     }
     else {
@@ -363,8 +362,8 @@ void AnalisadorSintatico::dc_loc()
 void AnalisadorSintatico::lista_arg()
 {
     imprimirEstagio("       Inicio da lista de argumentos");
-    imprimirToken();
     if (simbolo.cadeia == "(") {
+        imprimirToken();
         simbolo = aLex->obterSimbolo();
     }
     else {
@@ -394,7 +393,7 @@ void AnalisadorSintatico::argumentos()
 {
     imprimirEstagio("       Inicio dos argumentos");
     imprimirToken();
-    if (simbolo.tipo == "IDENTIFICADOR") {
+    if (simbolo.token == "IDENTIFICADOR") {
         simbolo = aLex->obterSimbolo();
     }
     else {
@@ -431,8 +430,8 @@ void AnalisadorSintatico::mais_ident()
 void AnalisadorSintatico::pfalsa()
 {
     imprimirEstagio("       Inicio de proposicao falsa");
-    imprimirToken();
     if (simbolo.cadeia == "else") {
+        imprimirToken();
         simbolo = aLex->obterSimbolo();
     }
     else {
@@ -453,7 +452,6 @@ void AnalisadorSintatico::pfalsa()
 void AnalisadorSintatico::comandos()
 {
     set<string> primeiro;
-    primeiro.clear();
     primeiro.insert("read");
     primeiro.insert("write");
     primeiro.insert("while");
@@ -462,7 +460,7 @@ void AnalisadorSintatico::comandos()
     primeiro.insert("IDENTIFICADOR");
     primeiro.insert("begin");
     imprimirEstagio("   Inicio de comandos");
-    if ((primeiro.find(simbolo.cadeia) == primeiro.end()) && (primeiro.find(simbolo.tipo) == primeiro.end())) {
+    if ((primeiro.find(simbolo.cadeia) == primeiro.end()) && (primeiro.find(simbolo.token) == primeiro.end())) {
         imprimirEstagio("   Fim de comandos");
         return;
     }
@@ -525,16 +523,22 @@ void AnalisadorSintatico::cmd()
     }
     else if (simbolo.cadeia == "if") {
         simbolo = aLex->obterSimbolo();
-        imprimirToken();
         condicao();
         if (simbolo.cadeia == "then") {
-            simbolo = aLex->obterSimbolo();
             imprimirToken();
+            simbolo = aLex->obterSimbolo();
             cmd();
+            imprimirToken();
+            simbolo = aLex->obterSimbolo();
             pfalsa();
+            imprimirToken();
+        }
+        else {
+            imprimirToken();
+            erro();
         }
     }
-    else if (simbolo.tipo == "IDENTIFICADOR") {
+    else if (simbolo.token == "IDENTIFICADOR") {
         simbolo = aLex->obterSimbolo();
         ident();
     }
@@ -558,8 +562,9 @@ void AnalisadorSintatico::cmd()
 
 void AnalisadorSintatico::ident()
 {
-    imprimirToken();
+    imprimirEstagio("Inicio ident");
     if (simbolo.cadeia == ":=") {
+        imprimirToken();
         simbolo = aLex->obterSimbolo();
         expressao();
     }
@@ -571,19 +576,23 @@ void AnalisadorSintatico::ident()
             erro();
         }
     }
+    imprimirEstagio("Fim ident");
 }
 
 
 void AnalisadorSintatico::condicao()
 {
+    imprimirEstagio("Inicio de condicao");
     expressao();
     relacao();
     expressao();
+    imprimirEstagio("Fim de condicao");
 }
 
 
 void AnalisadorSintatico::relacao()
 {
+    imprimirEstagio("Inicio de relacao");
     imprimirToken();
     if (simbolo.cadeia == "="  || simbolo.cadeia == "<>" ||
         simbolo.cadeia == ">=" || simbolo.cadeia == "<=" ||
@@ -595,24 +604,29 @@ void AnalisadorSintatico::relacao()
         imprimirErro("operador relacional esperado");
         erro();
     }
+    imprimirEstagio("Fim de relacao");
 }
 
 
 void AnalisadorSintatico::expressao()
 {
+    imprimirEstagio("Inicio de expressao");
     termo();
     outros_termos();
+    imprimirEstagio("Fim de expressao");
 }
 
 
 void AnalisadorSintatico::op_un()
 {
+    imprimirEstagio("Inicio de operador unario");
     if (simbolo.cadeia == "+" || simbolo.cadeia == "-") {
         imprimirToken();
         simbolo = aLex->obterSimbolo();
     }
     else {
         if (1) {
+            imprimirEstagio("Fim de operador unario");
             return;
         }
         else {
@@ -620,22 +634,27 @@ void AnalisadorSintatico::op_un()
             erro();
         }
     }
+    imprimirEstagio("Fim de operador unario");
 }
 
 
 void AnalisadorSintatico::outros_termos()
 {
-    if ((simbolo.cadeia[0] != '+') && (simbolo.cadeia[0] != '-')) {
+    imprimirEstagio("Inicio de outros termos");
+    if ((simbolo.cadeia != "+") && (simbolo.cadeia != "-")) {
+        imprimirEstagio("Fim de outros termos");
         return;
     }
     op_ad();
     termo();
+    imprimirEstagio("Fim de outros termos");
     outros_termos();
 }
 
 
 void AnalisadorSintatico::op_ad()
 {
+    imprimirEstagio("Inicio de operador de adicao");
     imprimirToken();
     if (simbolo.cadeia == "+" || simbolo.cadeia == "-") {
         simbolo = aLex->obterSimbolo();
@@ -644,30 +663,37 @@ void AnalisadorSintatico::op_ad()
         imprimirErro("operador adicao esperado");
         erro();
     }
+    imprimirEstagio("Fim de operador de adicao");
 }
 
 
 void AnalisadorSintatico::termo()
 {
+    imprimirEstagio("Inicio de termo");
     op_un();
     fator();
     mais_fatores();
+    imprimirEstagio("Fim de termo");
 }
 
 
 void AnalisadorSintatico::mais_fatores()
 {
-    if ((simbolo.cadeia[0] != '*') && (simbolo.cadeia[0] != '/')) {
+    imprimirEstagio("Inicio de mais fatores");
+    if ((simbolo.cadeia != "*") && (simbolo.cadeia != "/")) {
+        imprimirEstagio("Fim de mais fatores");
         return;
     }
     op_mul();
     fator();
+    imprimirEstagio("Fim de mais fatores");
     mais_fatores();
 }
 
 
 void AnalisadorSintatico::op_mul()
 {
+    imprimirEstagio("Inicio de operador de multiplicacao");
     imprimirToken();
     if (simbolo.cadeia == "*" || simbolo.cadeia == "/") {
         simbolo = aLex->obterSimbolo();
@@ -676,21 +702,25 @@ void AnalisadorSintatico::op_mul()
         imprimirErro("operador adicao esperado");
         erro();
     }
+    imprimirEstagio("Fim de operador de multiplicacao");
 }
 
 
 void AnalisadorSintatico::fator()
 {
+    imprimirEstagio("Inicio de fator");
     imprimirToken();
-    if (simbolo.tipo == "IDENTIFICADOR" ||
-        simbolo.cadeia == "NUM_INTEIRO" ||
-        simbolo.cadeia == "NUM_REAL") {
+    if (simbolo.token == "IDENTIFICADOR" ||
+        simbolo.token == "NUM_INTEIRO" ||
+        simbolo.token == "NUM_REAL")
+    {
         simbolo = aLex->obterSimbolo();
     }
     else {
         if (simbolo.cadeia == "(") {
             simbolo = aLex->obterSimbolo();
             expressao();
+            imprimirToken();
             if (simbolo.cadeia == ")") {
                 simbolo = aLex->obterSimbolo();
             }
@@ -704,6 +734,7 @@ void AnalisadorSintatico::fator()
             erro();
         }
     }
+    imprimirEstagio("Fim de fator");
 }
 
 
@@ -738,7 +769,7 @@ void AnalisadorSintatico::imprimirEstagio(string msg)
  */
 void AnalisadorSintatico::imprimirToken()
 {
-    if (imprimirSaidaLexico) {
+    if (imprimirSimbolos) {
         cout << simbolo.cadeia << endl;
         fflush(stdout);
     }

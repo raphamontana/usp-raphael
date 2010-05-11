@@ -6,6 +6,7 @@
  */
 AnalisadorLexico::AnalisadorLexico(string nomearquivo, vector<Simbolo> * simbolos)
 {
+    this->n_linha = 0;
     this->tabelaSimbolos = simbolos;
     //Abri o codigo fonte
     fonte = fopen(nomearquivo.data(), "r");
@@ -92,6 +93,7 @@ Simbolo AnalisadorLexico::obterSimbolo()
                     estado = RETORNA_PONTO_VIRGULA;
                 }
                 else if ((simbolo.cadeia.at(cadeiaLen) == '\n') || (simbolo.cadeia.at(cadeiaLen) == '\r')) {
+                    this->n_linha++;
                     simbolo.cadeia.clear();
                     cadeiaLen = -1;
                     estado = INICIAL;
@@ -138,6 +140,7 @@ Simbolo AnalisadorLexico::obterSimbolo()
                     estado = RETORNA_INTEIRO;
                 }
                 else {
+                    emiteErroLexico("Numero inteiro mal formado");
                     estado = RETORNA_ERRO;
                 }
                 break;
@@ -151,6 +154,7 @@ Simbolo AnalisadorLexico::obterSimbolo()
                     estado = ESTADO_REAL;
                 }
                 else {
+                    emiteErroLexico("Numero real mal formado");
                     estado = RETORNA_ERRO;
                 }
                 break;
@@ -162,6 +166,7 @@ Simbolo AnalisadorLexico::obterSimbolo()
                     estado = RETORNA_REAL;
                 }
                 else {
+                    emiteErroLexico("Numero real mal formado");
                     estado = RETORNA_ERRO;
                 }
                 break;
@@ -340,7 +345,7 @@ void AnalisadorLexico::devolveCaractere(int n)
 /**
  * Caso ocorra um erro no analisador lexico este metodo eh chamado para alertar o programador do erro.
  */
-void AnalisadorLexico::emiteErroLexico(int codigo)
+void AnalisadorLexico::emiteErroLexico(string msg)
 {
-    fprintf(stderr, "Erro %d na linha %d", codigo, n_linha);
+    cerr << "Erro lexico na linha " << n_linha << ": " << msg;
 }
