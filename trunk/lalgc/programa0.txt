@@ -1,4 +1,4 @@
 program ident;
 begin
-write(a);
+	write(a);
 end.

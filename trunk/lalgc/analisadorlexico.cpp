@@ -1,36 +1,43 @@
 #include "analisadorlexico.h"
 
 /**
- * @todo guardar o numero de linhas (para avisar de eventuais erros)
-*/
-
-/**
  * O construtor recebe os enderecos na memoria do arquivo fonte
  * e da tabela de simbolos para inserir os tokens que ele ler.
  */
-AnalisadorLexico::AnalisadorLexico(char * nomearquivo)
+AnalisadorLexico::AnalisadorLexico(string nomearquivo, vector<Simbolo> * simbolos)
 {
-    fonte = fopen(nomearquivo, "r");
+    this->tabelaSimbolos = simbolos;
+    //Abri o codigo fonte
+    fonte = fopen(nomearquivo.data(), "r");
     if (fonte == NULL) {
-        char msg[1024];
-        sprintf(msg, "Erro ao abrir arquivo %s", nomearquivo);
-        perror(msg);
+        string msg = "Erro ao abrir arquivo " + nomearquivo;
+        cerr << msg << endl;
         exit(0);
     }
-    constroiTabelaPalavrasReservadas();
+    // Constroi tabela de palavras reservadas
+    palavrasReservadas["program"] = "PROGRAM";
+    palavrasReservadas["var"] = "VAR";
+    palavrasReservadas["begin"] = "BEGIN";
+    palavrasReservadas["end"] = "END";
+    palavrasReservadas["if"] = "IF";
+    palavrasReservadas["then"] = "THEN";
+    palavrasReservadas["else"] = "ELSE";
+    palavrasReservadas["while"] = "WHILE";
+    palavrasReservadas["repeat"] = "REPEAT";
+    palavrasReservadas["do"] = "DO";
+    palavrasReservadas["until"] = "UNTIL";
+    palavrasReservadas["procedure"] = "PROCEDURE";
+    palavrasReservadas["integer"] = "INTEGER";
+    palavrasReservadas["real"] = "REAL";
+    palavrasReservadas["read"] = "READ";
+    palavrasReservadas["write"] = "WRITE";
 }
 
 
 AnalisadorLexico::~AnalisadorLexico()
 {
-    tabelaSimbolos->clear();
+    palavrasReservadas.clear();
     fclose(fonte);
-}
-
-
-void AnalisadorLexico::constroiTabelaPalavrasReservadas()
-{
-    this->tabelaSimbolos = new multimap<string, string>();
 }
 
 
@@ -38,72 +45,82 @@ void AnalisadorLexico::constroiTabelaPalavrasReservadas()
  * Este eh o metodo que varre o arquivo letra por letra,
  * e identifica os identificadoes, numeros, operadores, entre outros.
  */
-Token AnalisadorLexico::obterToken()
+Simbolo AnalisadorLexico::obterSimbolo()
 {
+    Simbolo simbolo;
     int estado = INICIAL;
-    Token token;
-    int tokenLen = -1;
-    while (true) {
-        token.cadeia[++tokenLen] = proxCaractere();
+    int cadeiaLen = -1;
+    map<string, string>::iterator it;
+    bool achouSimbolo = false;
+    while (!achouSimbolo) {
+        simbolo.cadeia += proxCaractere();
+        cadeiaLen++;
         switch (estado) {
             case INICIAL:
-                if (isdigit(token.cadeia[tokenLen])) {
+                if (isdigit(simbolo.cadeia.at(cadeiaLen))) {
                     estado = ESTADO_DIGITO;
                 }
-                else if (isalpha(token.cadeia[tokenLen])) {
+                else if (isalpha(simbolo.cadeia.at(cadeiaLen))) {
                     estado = ESTADO_LETRA;
                 }
-                else if (token.cadeia[tokenLen] == '=') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '=') {
                     estado = RETORNA_IGUAL;
                 }
-                else if (token.cadeia[tokenLen] == ':') {
+                else if (simbolo.cadeia.at(cadeiaLen) == ':') {
                     estado = ESTADO_ATRIBUICAO;
                 }
-                else if (token.cadeia[tokenLen] == '<') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '<') {
                     estado = ESTADO_MENOR;
                 }
-                else if (token.cadeia[tokenLen] == '>') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '>') {
                     estado = ESTADO_MAIOR;
                 }
-                else if (token.cadeia[tokenLen] == ' ') {
-                    tokenLen = -1;
+                else if (simbolo.cadeia.at(cadeiaLen) == ' ') {
+                    simbolo.cadeia.clear();
+                    cadeiaLen = -1;
                     estado = INICIAL;
                 }
-                else if (token.cadeia[tokenLen] == '{') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '\t') {
+                    simbolo.cadeia.clear();
+                    cadeiaLen = -1;
+                    estado = INICIAL;
+                }
+                else if (simbolo.cadeia.at(cadeiaLen) == '{') {
                     estado = ESTADO_COMENTARIO;
                 }
-                else if (token.cadeia[tokenLen] == ';') {
+                else if (simbolo.cadeia.at(cadeiaLen) == ';') {
                     estado = RETORNA_PONTO_VIRGULA;
                 }
-                else if ((token.cadeia[tokenLen] == '\n') || (token.cadeia[tokenLen] == '\r')) {
-                    tokenLen = -1;
+                else if ((simbolo.cadeia.at(cadeiaLen) == '\n') || (simbolo.cadeia.at(cadeiaLen) == '\r')) {
+                    simbolo.cadeia.clear();
+                    cadeiaLen = -1;
                     estado = INICIAL;
                 }
-                else if (token.cadeia[tokenLen] == ',') {
+                else if (simbolo.cadeia.at(cadeiaLen) == ',') {
                     estado = RETORNA_VIRGULA;
                 }
-                else if (token.cadeia[tokenLen] == '(') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '(') {
                     estado = RETORNA_ABRE_PARENTESES;
                 }
-                else if (token.cadeia[tokenLen] == ')') {
+                else if (simbolo.cadeia.at(cadeiaLen) == ')') {
                     estado = RETORNA_FECHA_PARENTESES;
                 }
-                else if (token.cadeia[tokenLen] == '+') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '+') {
                     estado = RETORNA_MAIS;
                 }
-                else if (token.cadeia[tokenLen] == '-') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '-') {
                     estado = RETORNA_MENOS;
                 }
-                else if (token.cadeia[tokenLen] == '*') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '*') {
                     estado = RETORNA_MULTIPLICACAO;
                 }
-                else if (token.cadeia[tokenLen] == '/') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '/') {
                     estado = RETORNA_DIVISAO;
                 }
-                else if (token.cadeia[tokenLen] == '.') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '.') {
                     estado = RETORNA_PONTO;
                 }
-                else if (token.cadeia[tokenLen] == EOF) {
+                else if (simbolo.cadeia.at(cadeiaLen) == EOF) {
                     estado = RETORNA_FIM_ARQUIVO;
                 }
                 else {
@@ -111,23 +128,26 @@ Token AnalisadorLexico::obterToken()
                 }
                 break;
             case ESTADO_DIGITO:
-                if (isdigit(token.cadeia[tokenLen])) {
+                if (isdigit(simbolo.cadeia.at(cadeiaLen))) {
                     estado = ESTADO_DIGITO;
                 }
-                else if (token.cadeia[tokenLen] == '.') {
+                else if (simbolo.cadeia.at(cadeiaLen) == '.') {
                     estado = PONTO_DECIMAL;
                 }
-                else {
+                else if (simbolo.cadeia.find_first_of(" =<>+-*/;){,") != string::npos) {
                     estado = RETORNA_INTEIRO;
+                }
+                else {
+                    estado = RETORNA_ERRO;
                 }
                 break;
             case RETORNA_INTEIRO:
-                token.cadeia[tokenLen-1] = '\0';
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
                 devolveCaractere(2);
-                strcpy(token.tipo, "NUM_INTEIRO");
-                return(token);
+                simbolo.token = "NUM_INTEIRO";
+                return(simbolo);
             case PONTO_DECIMAL:
-                if (isdigit(token.cadeia[tokenLen])) {
+                if (isdigit(simbolo.cadeia[cadeiaLen])) {
                     estado = ESTADO_REAL;
                 }
                 else {
@@ -135,20 +155,23 @@ Token AnalisadorLexico::obterToken()
                 }
                 break;
             case ESTADO_REAL:
-                if (isdigit(token.cadeia[tokenLen])) {
+                if (isdigit(simbolo.cadeia[cadeiaLen])) {
                     estado = ESTADO_REAL;
                 }
-                else {
+                else if (simbolo.cadeia.find_first_of(" =<>+-*/;){,") != string::npos) {
                     estado = RETORNA_REAL;
+                }
+                else {
+                    estado = RETORNA_ERRO;
                 }
                 break;
             case RETORNA_REAL:
-                token.cadeia[tokenLen-1] = '\0';
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
                 devolveCaractere(2);
-                strcpy(token.tipo, "NUM_REAL");
-                return(token);
+                simbolo.token = "NUM_REAL";
+                return(simbolo);
             case ESTADO_LETRA:
-                if (isalpha(token.cadeia[tokenLen]) || isdigit(token.cadeia[tokenLen])) {
+                if (isalpha(simbolo.cadeia[cadeiaLen]) || isdigit(simbolo.cadeia[cadeiaLen])) {
                     estado = ESTADO_LETRA;
                 }
                 else {
@@ -156,35 +179,44 @@ Token AnalisadorLexico::obterToken()
                 }
                 break;
             case RETORNA_IDENTIFICADOR:
-                token.cadeia[tokenLen-1] = '\0';
-                strcpy(token.tipo, "IDENTIFICADOR");
-                emitirToken(&token);
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
+                //Consulta tabela de palavras reservadas e
+                //analisa se o identificador contem uma palavra reservada
+                it = palavrasReservadas.find(simbolo.cadeia);
+                if (it != palavrasReservadas.end()) {
+                    simbolo.token = it->second;
+                }
+                else {
+                    simbolo.token = "IDENTIFICADOR";
+                }
                 devolveCaractere(2);
-                return(token);
+                return(simbolo);
             case ESTADO_MENOR:
-                if (token.cadeia[tokenLen] == '=') {
+                if (simbolo.cadeia[cadeiaLen] == '=') {
                     estado = RETORNA_MENOR_IGUAL;
                 }
-                else if (token.cadeia[tokenLen] == '>') {
+                else if (simbolo.cadeia[cadeiaLen] == '>') {
                     estado = RETORNA_NAO_IGUAL;
                 }
                 else estado = RETORNA_MENOR;
                 break;
             case RETORNA_MENOR_IGUAL:
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "LE");
-                return(token);
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "LE";
+                devolveCaractere(1);
+                return(simbolo);
             case RETORNA_NAO_IGUAL:
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "NE");
-                return(token);
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "NE";
+                devolveCaractere(1);
+                return(simbolo);
             case RETORNA_MENOR:
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
+                simbolo.token = "LT";
                 devolveCaractere(2);
-                token.cadeia[tokenLen-1] = '\0';
-                strcpy(token.tipo, "LT");
-                return(token);
+                return(simbolo);
             case ESTADO_ATRIBUICAO:
-                if (token.cadeia[tokenLen] == '=') {
+                if (simbolo.cadeia[cadeiaLen] == '=') {
                     estado = RETORNA_ATRIBUICAO;
                 }
                 else {
@@ -192,93 +224,96 @@ Token AnalisadorLexico::obterToken()
                 }
                 break;
             case RETORNA_TIPO_VAR:
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
+                simbolo.token = ":";
                 devolveCaractere(2);
-                token.cadeia[tokenLen-1] = '\0';
-                strcpy(token.tipo, ":");
-                return(token);
+                return(simbolo);
             case RETORNA_ATRIBUICAO:
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "ASSIGN";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "ASSIGN");
-                return(token);
+                return(simbolo);
             case ESTADO_MAIOR:
-                if (token.cadeia[tokenLen] == '=')
+                if (simbolo.cadeia[cadeiaLen] == '=')
                     estado = RETORNA_MAIOR_IGUAL;
                 else estado = RETORNA_MAIOR;
                 break;
             case RETORNA_MAIOR_IGUAL:
-                strcpy(token.tipo, "GE");
-                return(token);
+                simbolo.cadeia.erase(cadeiaLen, 3);
+                simbolo.token = "GE";
+                devolveCaractere(1);
+                return(simbolo);
             case RETORNA_MAIOR:
+                simbolo.cadeia.erase(cadeiaLen-1, 2);
+                simbolo.token = "GT";
                 devolveCaractere(2);
-                token.cadeia[tokenLen-1] = '\0';
-                strcpy(token.tipo, "GT");
-                return(token);
+                return(simbolo);
             case RETORNA_IGUAL:
-                strcpy(token.tipo, "EQ");
-                return(token);
+                simbolo.token = "EQ";
+                return(simbolo);
             case RETORNA_VIRGULA:
-                token.cadeia[tokenLen] = '\0';
+                simbolo.cadeia.erase(cadeiaLen, 1);
                 devolveCaractere(1);
-                strcpy(token.tipo, ",");
-                return(token);
+                simbolo.token = ",";
+                return(simbolo);
             case RETORNA_MAIS:
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "PLUS";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "PLUS");
-                return(token);
+                return(simbolo);
             case RETORNA_MENOS:
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "MINUS";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "MINUS");
-                return(token);
+                return(simbolo);
             case RETORNA_MULTIPLICACAO:
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "MULT";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "MULT");
-                return(token);
+                return(simbolo);
             case RETORNA_DIVISAO:
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "DIV";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, "DIV");
-                return(token);
+                return(simbolo);
             case RETORNA_PONTO_VIRGULA:
-                strcpy(token.tipo, ";");
-                token.cadeia[tokenLen] = '\0';
-                return(token);
+                simbolo.cadeia = ";";
+                simbolo.token = ";";
+                return(simbolo);
             case RETORNA_ABRE_PARENTESES:
-                token.cadeia[tokenLen] = '\0';
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "(";
                 devolveCaractere(1);
-                strcpy(token.tipo, "(");
-                return(token);
+                return(simbolo);
             case RETORNA_FECHA_PARENTESES:
-                token.cadeia[tokenLen] = '\0';
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = ")";
                 devolveCaractere(1);
-                strcpy(token.tipo, ")");
-                return(token);
+                return(simbolo);
             case ESTADO_COMENTARIO:
-                if (token.cadeia[tokenLen] == '}') {
-                    tokenLen = -1;
+                if (simbolo.cadeia[cadeiaLen] == '}') {
+                    simbolo.cadeia.clear();
+                    cadeiaLen = -1;
                     estado = INICIAL;
                 }
                 break;
             case RETORNA_PONTO:
-                token.cadeia[tokenLen] = '\0';
-                strcpy(token.tipo, ".");
-                return(token);
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = ".";
+                return(simbolo);
             case RETORNA_FIM_ARQUIVO:
-                strcpy(token.tipo, "EOF");
-                return(token);
+                simbolo.token = "EOF";
+                return(simbolo);
             case RETORNA_ERRO:
-                strcpy(token.tipo, "ERRO");
+                simbolo.cadeia.erase(cadeiaLen, 1);
+                simbolo.token = "ERRO";
                 devolveCaractere(1);
-                token.cadeia[tokenLen] = '\0';
-                return(token);
+                return(simbolo);
             default:
                 break;
         }
     }
-    return(token);
+    return(simbolo);
 }
 
 
@@ -293,69 +328,12 @@ char AnalisadorLexico::proxCaractere()
 
 
 /**
- * No caso de ter lido um caractere a mais que nao pertence ao token atual,
- * este metodo recua no arquivo para que o proximo token seja reconhecido corretamente.
+ * No caso de ter lido um caractere a mais que nao pertence ao simbolo atual,
+ * este metodo recua no arquivo para que o proximo simbolo seja reconhecido corretamente.
  */
 void AnalisadorLexico::devolveCaractere(int n)
 {
     fseek(fonte, (-1)*n*sizeof(char), SEEK_CUR);
-}
-
-
-/**
- * A principal funcao deste metodo eh separar as palavras reservadas dos identificadores
- * e inserir os tokens na tabela hash de simbolos.
- */
-void AnalisadorLexico::emitirToken(Token * token)
-{
-    //Analisa se algum identificador contem uma palavra reservada
-    if (!strcmp(token->cadeia, "program")) {
-        strcpy(token->tipo, "program");
-    }
-    else if (!strcmp(token->cadeia, "var")) {
-        strcpy(token->tipo, "var");
-    }
-    else if (!strcmp(token->cadeia, "begin")) {
-        strcpy(token->tipo, "begin");
-    }
-    else if (!strcmp(token->cadeia, "end")) {
-        strcpy(token->tipo, "end");
-    }
-    else if (!strcmp(token->cadeia, "if")) {
-        strcpy(token->tipo, "if");
-    }
-    else if (!strcmp(token->cadeia, "then")) {
-        strcpy(token->tipo, "then");
-    }
-    else if (!strcmp(token->cadeia, "else")) {
-        strcpy(token->tipo, "else");
-    }
-    else if (!strcmp(token->cadeia, "while")) {
-        strcpy(token->tipo, "while");
-    }
-    else if (!strcmp(token->cadeia, "repeat")) {
-        strcpy(token->tipo, "repeat");
-    }
-    else if (!strcmp(token->cadeia, "do")) {
-        strcpy(token->tipo, "do");
-    }
-    else if (!strcmp(token->cadeia, "until")) {
-        strcpy(token->tipo, "until");
-    }
-    else if (!strcmp(token->cadeia, "procedure")) {
-        strcpy(token->tipo, "procedure");
-    }
-    else if (!strcmp(token->cadeia, "integer")) {
-        strcpy(token->tipo, "integer");
-    }
-    else if (!strcmp(token->cadeia, "real")) {
-        strcpy(token->tipo, "real");
-    }
-    else if (!strcmp(token->tipo, "EOF")) {
-        return;
-    }
-    //tabelaSimbolos->insert(pair<string, string> (token->cadeia, token->tipo));
-    //cout << token->cadeia << " - " << token->tipo << endl;
 }
 
 

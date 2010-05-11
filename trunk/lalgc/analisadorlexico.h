@@ -7,7 +7,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-
+#include <vector>
 using namespace std;
 
 
@@ -51,13 +51,19 @@ enum estados {
 
 
 /**
- * Estrutura interna para armazenar um token
+ * Estrutura interna para armazenar um simbolo
  * corresponde de duas palavras, uma identifica o simbolo e a outra o significado do simbolo.
  */
 typedef struct {
-    char cadeia[128];
-    char tipo[24];
-} Token;
+    string cadeia;
+    string token;
+    string categoria;
+    string tipo;
+    string valor;
+    int nro_param;
+    int nro_var_locais;
+    int escopo;
+} Simbolo;
 
 
 /**
@@ -66,17 +72,13 @@ typedef struct {
 class AnalisadorLexico
 {
 public:
-    AnalisadorLexico(char * nomearquivo);
+    AnalisadorLexico(string nomearquivo, vector<Simbolo> * simbolos);
 
     ~AnalisadorLexico();
 
-    Token obterToken();
-
-    void emitirToken(Token * token);
+    Simbolo obterSimbolo();
 
 private:
-    void constroiTabelaPalavrasReservadas();
-
     char proxCaractere();
 
     void devolveCaractere(int n);
@@ -85,7 +87,9 @@ private:
 
     FILE * fonte;
 
-    multimap<string, string> * tabelaSimbolos;
+    vector<Simbolo> * tabelaSimbolos;
+
+    map<string, string> palavrasReservadas;
 
     int n_linha;
 };
