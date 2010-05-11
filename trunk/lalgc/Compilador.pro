@@ -8,15 +8,15 @@ CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
 SOURCES += main.cpp \
-    analisadorlexico.cpp \
-    analisadorsemantico.cpp \
     compilador.cpp \
-    analisadorsintatico.cpp
-HEADERS += analisadorlexico.h \
-    analisadorsemantico.h \
-    erro.h \
+    analisadorsintatico.cpp \
+    analisadorsemantico.cpp \
+    analisadorlexico.cpp
+HEADERS += erro.h \
     compilador.h \
-    analisadorsintatico.h
+    analisadorsintatico.h \
+    analisadorsemantico.h \
+    analisadorlexico.h
 QMAKE_CXXFLAGS += -Wall \
     -Wextra \
     -pedantic-errors
