@@ -1,12 +1,6 @@
 #ifndef ANALISADORSINTATICO_H
 #define ANALISADORSINTATICO_H
 
-/**
- * Defines sao usados para depurar o programa.
- */
-#define imprimirEstagios
-#define imprimirSaidaLexico
-
 #include "analisadorlexico.h"
 #include <set>
 using namespace std;
@@ -52,11 +46,18 @@ private:
     void fator();
     void erro();
     void imprimirEstagio(string msg);
-    void imprimirToken(string msg);
+    void imprimirToken();
     void imprimirErro(string msg);
 
     AnalisadorLexico * aLex;
-    Token token;
+    Simbolo simbolo;
+    int contagemErros;
+
+    /**
+     * Variaveis logicas usadas para depurar o programa.
+     */
+    bool imprimirEstagios;
+    bool imprimirSaidaLexico;
 };
 
 #endif // ANALISADORSINTATICO_H

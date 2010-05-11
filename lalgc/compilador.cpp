@@ -9,20 +9,29 @@
  */
 Compilador::Compilador(char * nomearquivo)
 {
-    aLex = new AnalisadorLexico(nomearquivo);
+    tabelaSimbolos = new vector<Simbolo>();
+    aLex = new AnalisadorLexico(nomearquivo, tabelaSimbolos);
     aSin = new AnalisadorSintatico(aLex);
-    //testarLexico();
-    aSin->asd();
+    testarLexico();
+    //aSin->asd();
     delete(aSin);
     delete(aLex);
 }
 
+
+Compilador::~Compilador()
+{
+    tabelaSimbolos->clear();
+    delete(tabelaSimbolos);
+}
+
+
 void Compilador::testarLexico()
 {
-    Token token = aLex->obterToken();
-    aLex->emitirToken(&token);
-    while (strcmp("EOF", token.tipo)) {
-        token = aLex->obterToken();
-        aLex->emitirToken(&token);
+    Simbolo simbolo = aLex->obterSimbolo();
+    cout << simbolo.cadeia << " # " << simbolo.token << endl;
+    while (simbolo.token != "EOF") {
+        simbolo = aLex->obterSimbolo();
+        cout << simbolo.cadeia << " # " << simbolo.token<<endl;
     }
 }

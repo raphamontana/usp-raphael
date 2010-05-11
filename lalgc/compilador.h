@@ -11,8 +11,12 @@ class Compilador
 public:
     Compilador(char * nomearquivo);
 
+    ~Compilador();
+
 private:
     void testarLexico();
+
+    vector<Simbolo> * tabelaSimbolos;
 
     AnalisadorLexico * aLex;
 
