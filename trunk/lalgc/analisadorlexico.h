@@ -83,7 +83,7 @@ private:
 
     void devolveCaractere(int n);
 
-    void emiteErroLexico(int codigo);
+    void emiteErroLexico(string msg);
 
     FILE * fonte;
 

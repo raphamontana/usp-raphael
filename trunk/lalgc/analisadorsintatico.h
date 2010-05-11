@@ -57,7 +57,7 @@ private:
      * Variaveis logicas usadas para depurar o programa.
      */
     bool imprimirEstagios;
-    bool imprimirSaidaLexico;
+    bool imprimirSimbolos;
 };
 
 #endif // ANALISADORSINTATICO_H
